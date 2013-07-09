@@ -50,8 +50,6 @@ update-initramfs -u -k $(uname -r)
 
 # Install DRBD
 apt-get install drbd8-utils
-# ...and start the kernel module
-modprobe drbd
 
 # Postgres resource
 cat << EOF > /etc/drbd.d/pg.res
@@ -79,16 +77,19 @@ EOF
 # Disable DRBD on startup, this will be managed by Pacemaker
 update-rc.d drbd disable
 
-# Set up the device with the Postgres resource
-drbdadm create-md pg
-drbdadm up pg
-
 # Wait for the primary node
 if [[ $nodetype == "s" ]]; then
   echo -n "Wait for the primary node to start drbd, then press Enter... "
   read _junk
   sleep 2
 fi
+
+# Start the kernel module
+modprobe drbd
+
+# Set up the device with the Postgres resource
+drbdadm create-md pg
+drbdadm up pg
 
 # Start the DRBD service
 service drbd start
