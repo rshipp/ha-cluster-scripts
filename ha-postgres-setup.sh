@@ -83,13 +83,20 @@ update-rc.d drbd disable
 drbdadm create-md pg
 drbdadm up pg
 
+# Wait for the primary node
+if [[ $nodetype == "s" ]]; then
+  echo -n "Wait for the primary node to start drbd, then press Enter... "
+  read _junk
+  sleep 2
+fi
+
 # Start the DRBD service
 service drbd start
 drbdadm -- --overwrite-data-of-peer primary pg
 
 cat /proc/drbd
 echo "Sleeping..."
-sleep 5
+sleep 10
 cat /proc/drbd
 
 # Set up LVM - PRIMARY NODE ONLY!
@@ -116,7 +123,6 @@ if [[ $nodetype == "p" ]]; then
 fi
 
 # Get PG working
-
 # Kill the default config and create a new one for ourselves
 service postgresql stop
 pg_dropcluster 9.1 main
