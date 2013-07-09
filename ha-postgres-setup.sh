@@ -39,7 +39,7 @@ read virtualip
 apt-get install lvm2
 
 # LVM filter for DRBD
-sed -i 's/^filter =/filter = [ "r|/dev/sdb|", "r|/dev/disk/*|", "r|/dev/block/*|", "a|.*|" ]/g' \
+sed -i 's/^filter =/filter = [ "r|\/dev\/sdb|", "r|\/dev\/disk\/*|", "r|\/dev\/block\/*|", "a|.*|" ]/g' \
   /etc/lvm/lvm.conf
   
 sed -i 's/^write_cache_state = /write_cache_state = 0/g' \
