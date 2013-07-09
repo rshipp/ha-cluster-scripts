@@ -50,6 +50,8 @@ update-initramfs -u -k $(uname -r)
 
 # Install DRBD
 apt-get install drbd8-utils
+# ...and start the kernel module
+modprobe drbd
 
 # Postgres resource
 cat << EOF > /etc/drbd.d/pg.res
