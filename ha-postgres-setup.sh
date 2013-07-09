@@ -167,9 +167,17 @@ service corosync start
 
 # Wait for both to appear
 echo "Waiting for both nodes to come online..."
-while ! (crm_mon | grep Online.*${primaryname}.*${secondaryname}); do
+crm_mon > /tmp/crm_mon &
+sleep 2
+kill %1
+while ! ((grep Online.*${primaryname}.*${secondaryname} /tmp/crm_mon) || 
+         (grep Online.*${secondaryname}.*${primaryname} /tmp/crm_mon)); do
   sleep 2
+  crm_mon > /tmp/crm_mon &
+  sleep 2
+  kill %1
 done
+echo " ...done."
 
 # Configure pacemaker
 crm configure property stonith-enabled="false"
