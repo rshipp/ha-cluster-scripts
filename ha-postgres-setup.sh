@@ -12,7 +12,7 @@
   ) || exit 1
 
 # Get information we will need later
-while [[ $nodetype != "p" || $nodetype != "s" ]]; do
+while ! [[ $nodetype == "p" || $nodetype == "s" ]]; do
   echo -n "Is this the primary or secondary node? [p/s]: "
   read nodetype
 done
